@@ -1,0 +1,34 @@
+--- a/node_modules/expo-modules-core/android/build.gradle
++++ b/node_modules/expo-modules-core/android/build.gradle
+@@ -65,16 +65,16 @@ def reactProperties = new Properties()
+ 
+     externalNativeBuild {
+       cmake {
+-        abiFilters (*reactNativeArchitectures())
++        abiFilters (isExpoModulesCoreTests ? *reactNativeArchitectures() : ["arm64-v8a"])
+         arguments "-DANDROID_STL=c++_shared",
+           "-DREACT_NATIVE_DIR=${REACT_NATIVE_DIR}",
+           "-DREACT_NATIVE_TARGET_VERSION=${REACT_NATIVE_TARGET_VERSION}",
+           "-DUSE_HERMES=${USE_HERMES}",
+           "-DIS_NEW_ARCHITECTURE_ENABLED=${isNewArchitectureEnabled}",
+-          "-DUNIT_TEST=${isExpoModulesCoreTests}"
++          "-DUNIT_TEST=${isExpoModulesCoreTests}"
+       }
+     }
+   }
+ 
+-  externalNativeBuild {
+-    cmake {
+-      path "CMakeLists.txt"
+-    }
+-  }
++  if (isExpoModulesCoreTests) {
++    externalNativeBuild {
++      cmake {
++        path "CMakeLists.txt"
++      }
++    }
++  }
+ 
+   buildFeatures {
+     buildConfig true
