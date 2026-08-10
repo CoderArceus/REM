@@ -1,18 +1,20 @@
 {
   "cli": {
-    "version": ">= 5.9.1"
+    "version": ">= 5.9.0"
   },
   "build": {
     "preview": {
       "android": {
         "buildType": "apk",
-        "jsEngine": "jsc"
+        "jsEngine": "jsc",
+        "gradleCommand": ":app:assembleRelease"
       }
     },
     "production": {
       "android": {
         "buildType": "apk",
-        "jsEngine": "jsc"
+        "jsEngine": "jsc",
+        "gradleCommand": ":app:assembleRelease"
       }
     }
   },
