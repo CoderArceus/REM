@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    name: Build Debug APK (Local)
+    name: Build Release APK
     runs-on: ubuntu-latest
     timeout-minutes: 45
     defaults:
@@ -34,9 +34,9 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
         with:
-          api-level: 34
-          ndk-version: r26c
-          cmake-version: 3.22.1
+          cmdline-tools-version: 'latest'
+          accept-android-sdk-licenses: true
+          packages: 'platforms;android-34 build-tools;34.0.0 ndk;26.1.10909125 cmake;3.22.1'
       
       - name: Cache Gradle
         uses: actions/cache@v4
@@ -54,8 +54,8 @@ jobs:
       - name: Generate native code (expo prebuild)
         run: npx expo prebuild --platform android --clean
       
-      - name: Build Debug APK
-        run: ./gradlew assembleDebug --no-daemon
+      - name: Build Release APK
+        run: ./gradlew assembleRelease --no-daemon
         working-directory: ./android
         env:
           ANDROID_HOME: ${{ env.ANDROID_HOME }}
@@ -63,6 +63,6 @@ jobs:
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: rem-sleep-cycle-debug-apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          name: rem-sleep-cycle-release-apk
+          path: android/app/build/outputs/apk/release/app-release-unsigned.apk
           retention-days: 30
