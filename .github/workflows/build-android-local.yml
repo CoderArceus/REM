@@ -60,9 +60,14 @@ jobs:
         env:
           ANDROID_HOME: ${{ env.ANDROID_HOME }}
       
+      - name: Find APK
+        run: find android/app/build/outputs -name "*.apk" -type f
+      
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: rem-sleep-cycle-release-apk
-          path: android/app/build/outputs/apk/release/app-release-unsigned.apk
+          path: |
+            android/app/build/outputs/apk/release/*.apk
+            android/app/build/outputs/apk/**/*.apk
           retention-days: 30
