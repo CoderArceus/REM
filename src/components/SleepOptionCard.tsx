@@ -98,9 +98,6 @@ export const SleepOptionCard: React.FC<SleepOptionCardProps> = ({
     onPress();
   };
 
-  const qualityShadows = neumorphicShadows.raised;
-  const selectedShadows = neumorphicShadows.deep;
-
   return (
     <Animated.View style={[{ transform: [{ scale: animatedScale }] }, styles.container]}>
       <TouchableOpacity
@@ -235,9 +232,6 @@ export const SleepOptionCard: React.FC<SleepOptionCardProps> = ({
   );
 };
 
-import { useState, useEffect } from 'react';
-import { baseColors, borderRadius, spacing, typography } from '@/constants/neumorphism';
-
 const styles = StyleSheet.create({
   container: { 
     width: '100%', 
@@ -367,6 +361,6 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 4,
   },
-};
+});
 
 export default SleepOptionCard;

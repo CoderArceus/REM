@@ -97,6 +97,7 @@ export const SettingsScreen: React.FC = () => {
               <Text style={styles.settingTitle}>Haptic Feedback</Text>
               <Text style={styles.settingDesc}>Vibrate on interactions</Text>
             </View>
+            <NeumorphicToggle value={vibrationEnabled} onChange={setVibrationEnabled} />
           </View>
         </NeumorphicCard>
 
@@ -119,21 +120,28 @@ export const SettingsScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: baseColors.bg },
   scroll: { flex: 1 },
-  content: { padding: 16, paddingBottom: 48, gap: 24 },
-  header: { alignItems: 'center', marginTop: 8, marginBottom: 24, gap: 4 },
-  title: { fontSize: 36, fontWeight: '700', color: '#ffffff', letterSpacing: -1 },
-  subtitle: { fontSize: 16, color: '#8892b0', fontWeight: '500' },
-  sectionCard: { gap: 16 },
-  sectionTitle: { fontSize: 14, fontWeight: '600', color: '#8892b0', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 },
-  settingRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 12, borderBottomWidth: 1, borderColor: '#1e1e3a', borderStyle: 'dashed' },
+  content: { padding: spacing.md, paddingBottom: spacing.xxl, gap: spacing.lg },
+  header: { alignItems: 'center', marginTop: spacing.sm, marginBottom: spacing.md, gap: spacing.xs },
+  title: { fontSize: typography.xxxl, fontWeight: typography.bold, color: baseColors.text, letterSpacing: -1 },
+  subtitle: { fontSize: typography.md, color: baseColors.textMuted, fontWeight: typography.medium },
+  sectionCard: { gap: spacing.md },
+  sectionTitle: { fontSize: typography.md, fontWeight: typography.semibold, color: baseColors.textMuted, textTransform: 'uppercase', letterSpacing: 1, marginBottom: spacing.xs },
+  settingRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: spacing.sm, borderBottomWidth: 1, borderColor: baseColors.borderDim, borderStyle: 'dashed' },
   settingInfo: { flex: 1 },
-  settingTitle: { fontSize: 15, fontWeight: '600', color: '#ffffff', marginBottom: 2 },
-  settingDesc: { fontSize: 11, color: '#4a5568' },
-  permissionButton: { marginTop: 8, paddingVertical: 8, paddingHorizontal: 12, borderRadius: 12, backgroundColor: '#ff6b6b33', borderWidth: 1, borderColor: '#ff6b6b', alignSelf: 'flex-start' },
-  permissionButtonText: { color: '#ff6b6b', fontSize: 13, fontWeight: '600' },
-  aboutRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 4, borderBottomWidth: 1, borderColor: '#1e1e3a', borderStyle: 'dashed' },
-  aboutLabel: { color: '#8892b0', fontSize: 15 },
-  aboutValue: { color: '#ffffff', fontSize: 15, fontWeight: '500' },
+  settingTitle: { fontSize: typography.md, fontWeight: typography.semibold, color: baseColors.text, marginBottom: 2 },
+  settingDesc: { fontSize: typography.xs, color: baseColors.textDim },
+  permissionButton: { marginTop: spacing.sm, paddingVertical: spacing.sm, paddingHorizontal: spacing.md, borderRadius: borderRadius.md, backgroundColor: baseColors.accentDim, borderWidth: 1, borderColor: baseColors.accent, alignSelf: 'flex-start' },
+  permissionButtonText: { color: baseColors.accent, fontSize: typography.sm, fontWeight: typography.semibold },
+  themeSelector: { flexDirection: 'row', gap: spacing.sm },
+  themeOption: { paddingHorizontal: spacing.lg, paddingVertical: spacing.sm, borderRadius: borderRadius.full, backgroundColor: baseColors.bgTertiary, borderWidth: 1, borderColor: baseColors.borderDim },
+  themeOptionActive: { backgroundColor: baseColors.primary, borderColor: baseColors.primary },
+  themeOptionText: { fontSize: typography.sm, color: baseColors.textMuted, fontWeight: typography.medium },
+  themeOptionTextActive: { color: baseColors.bg, fontWeight: typography.semibold },
+  dangerButton: { paddingVertical: spacing.md, paddingHorizontal: spacing.lg, borderRadius: borderRadius.md, backgroundColor: baseColors.accentDim, borderWidth: 1, borderColor: baseColors.accent, alignItems: 'center' },
+  dangerButtonText: { color: baseColors.accent, fontSize: typography.md, fontWeight: typography.semibold },
+  aboutRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: spacing.xs, borderBottomWidth: 1, borderColor: baseColors.borderDim, borderStyle: 'dashed' },
+  aboutLabel: { color: baseColors.textMuted, fontSize: typography.md },
+  aboutValue: { color: baseColors.text, fontSize: typography.md, fontWeight: typography.medium },
 });
 
 export default SettingsScreen;

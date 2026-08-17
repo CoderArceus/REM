@@ -28,11 +28,6 @@ export default function TabsLayout() {
           textTransform: 'uppercase',
           letterSpacing: 0.5,
         },
-        tabBarIndicatorStyle: {
-          backgroundColor: baseColors.primary,
-          height: 3,
-          borderRadius: 2,
-        },
       }}
     >
       <Tabs.Screen

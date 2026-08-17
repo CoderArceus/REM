@@ -62,7 +62,7 @@ export const HomeScreen: React.FC = () => {
       }
       await Notifications.scheduleNotificationAsync({
         content: { title: 'Bedtime Reminder', body: `Time to wind down for optimal sleep!` },
-        trigger: { date: bedtimeDate, repeats: true },
+        trigger: { date: bedtimeDate, repeats: true } as any,
       });
     } catch (e) {
       console.log('Notification scheduling failed:', e);
@@ -127,7 +127,7 @@ export const HomeScreen: React.FC = () => {
         <NeumorphicButton style={styles.alarmButton} onPress={async () => {
           await Notifications.scheduleNotificationAsync({
             content: { title: 'Bedtime Reminder', body: `Time to wind down for ${selectedOption.displayTime}!` },
-            trigger: { seconds: 5 },
+            trigger: { seconds: 5 } as any,
           });
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
         }} variant="primary">

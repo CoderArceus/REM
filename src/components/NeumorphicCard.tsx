@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, ViewStyle, StyleSheet } from 'react-native';
-import { neumorphicShadows, baseColors, borderRadius } from '@/constants/neumorphism';
+import { View, ViewStyle, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { neumorphicShadows, baseColors, borderRadius, spacing, typography, animation } from '@/constants/neumorphism';
 
 interface NeumorphicCardProps {
   children: React.ReactNode;
@@ -24,78 +24,102 @@ export const NeumorphicCard: React.FC<NeumorphicCardProps> = ({
   disabled = false,
 }) => {
   const s = neumorphicShadows[variant];
-  
-  // For true dual-shadow on iOS, we use nested Views
-  // Outer view: highlight (top-left)
-  // Inner view: shadow (bottom-right) + content
+  const actualVariant = onPress && !disabled ? 'pressed' : variant;
+
   const outerStyle: ViewStyle = {
-    backgroundColor: 'transparent',
     borderRadius: radius,
     padding: 0,
-    shadowColor: s.highlight.color,
-    shadowOffset: { width: s.highlight.offsetX, height: s.highlight.offsetY },
-    shadowOpacity: s.highlight.opacity,
-    shadowRadius: s.highlight.blur / 2,
-    // iOS specific
-    ...(s.innerHighlight && {
-      // Will be handled by inner view
-    }),
+    shadowColor: neumorphicShadows[actualVariant].highlight.color,
+    shadowOffset: {
+      width: neumorphicShadows[actualVariant].highlight.offsetX,
+      height: neumorphicShadows[actualVariant].highlight.offsetY,
+    },
+    shadowOpacity: neumorphicShadows[actualVariant].highlight.opacity,
+    shadowRadius: neumorphicShadows[actualVariant].highlight.blur / 2,
   };
 
   const innerStyle: ViewStyle = {
-    backgroundColor: baseColors.bg,
+    backgroundColor: actualVariant === 'pressed' ? baseColors.bgTertiary : baseColors.bg,
     borderRadius: radius,
     padding,
-    shadowColor: s.shadow.color,
-    shadowOffset: { width: s.shadow.offsetX, height: s.shadow.offsetY },
-    shadowOpacity: s.shadow.opacity,
-    shadowRadius: s.shadow.blur / 2,
-    elevation: variant === 'flat' ? 1 : variant === 'pressed' ? 3 : variant === 'deep' ? 12 : 8,
-    // Inner shadows via overlay
-    ...(s.innerHighlight && {
-      // We'll use a pseudo-element approach via extra View
-    }),
+    shadowColor: neumorphicShadows[actualVariant].shadow.color,
+    shadowOffset: {
+      width: neumorphicShadows[actualVariant].shadow.offsetX,
+      height: neumorphicShadows[actualVariant].shadow.offsetY,
+    },
+    shadowOpacity: neumorphicShadows[actualVariant].shadow.opacity,
+    shadowRadius: neumorphicShadows[actualVariant].shadow.blur / 2,
+    elevation: actualVariant === 'flat' ? 1 : actualVariant === 'pressed' ? 3 : actualVariant === 'deep' ? 12 : 8,
   };
 
-  const pressedStyle: ViewStyle = {
-    backgroundColor: variant === 'pressed' ? baseColors.bgTertiary : baseColors.bg,
-    borderRadius: radius,
-    padding,
-    shadowColor: s.shadow.color,
-    shadowOffset: { width: s.shadow.offsetX, height: s.shadow.offsetY },
-    shadowOpacity: s.shadow.opacity,
-    shadowRadius: s.shadow.blur / 2,
-    elevation: variant === 'flat' ? 1 : variant === 'pressed' ? 3 : variant === 'deep' ? 12 : 8,
-  };
-
-  // For pressed variant, invert shadows
-  const actualVariant = onPress && !disabled ? 'pressed' : variant;
+  if (onPress) {
+    return (
+      <TouchableOpacity
+        style={[{ borderRadius: radius }, style]}
+        onPress={onPress}
+        activeOpacity={activeOpacity}
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityState={{ disabled }}
+      >
+        {/* Outer highlight (top-left) */}
+        <View
+          style={[
+            { borderRadius: radius, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 },
+            {
+              shadowColor: neumorphicShadows[actualVariant].highlight.color,
+              shadowOffset: {
+                width: neumorphicShadows[actualVariant].highlight.offsetX,
+                height: neumorphicShadows[actualVariant].highlight.offsetY,
+              },
+              shadowOpacity: neumorphicShadows[actualVariant].highlight.opacity,
+              shadowRadius: neumorphicShadows[actualVariant].highlight.blur / 2,
+            }
+          ]}
+          pointerEvents="none"
+        />
+        
+        {/* Inner content with shadow (bottom-right) */}
+        <View
+          style={[
+            { 
+              borderRadius: radius,
+              backgroundColor: actualVariant === 'pressed' ? baseColors.bgTertiary : baseColors.bg,
+              padding,
+              flex: 1,
+            },
+            {
+              shadowColor: neumorphicShadows[actualVariant].shadow.color,
+              shadowOffset: {
+                width: neumorphicShadows[actualVariant].shadow.offsetX,
+                height: neumorphicShadows[actualVariant].shadow.offsetY,
+              },
+              shadowOpacity: neumorphicShadows[actualVariant].shadow.opacity,
+              shadowRadius: neumorphicShadows[actualVariant].shadow.blur / 2,
+              elevation: actualVariant === 'flat' ? 1 : actualVariant === 'pressed' ? 3 : actualVariant === 'deep' ? 12 : 8,
+            }
+          ]}
+        >
+          {children}
+        </View>
+      </TouchableOpacity>
+    );
+  }
 
   return (
-    <View
-      style={[
-        { borderRadius: radius },
-        style,
-        onPress ? { opacity: disabled ? 0.5 : 1 } : {}
-      ]}
-      onPress={onPress}
-      activeOpacity={activeOpacity}
-      accessible={!!onPress}
-      accessibilityRole={onPress ? 'button' : undefined}
-      accessibilityState={{ disabled }}
-    >
-      {/* Outer highlight (top-left) - iOS */}
+    <View style={[{ borderRadius: radius }, style]}>
+      {/* Outer highlight (top-left) */}
       <View
         style={[
           { borderRadius: radius, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 },
           {
-            shadowColor: neumorphicShadows[actualVariant].highlight.color,
+            shadowColor: neumorphicShadows[variant].highlight.color,
             shadowOffset: {
-              width: neumorphicShadows[actualVariant].highlight.offsetX,
-              height: neumorphicShadows[actualVariant].highlight.offsetY,
+              width: neumorphicShadows[variant].highlight.offsetX,
+              height: neumorphicShadows[variant].highlight.offsetY,
             },
-            shadowOpacity: neumorphicShadows[actualVariant].highlight.opacity,
-            shadowRadius: neumorphicShadows[actualVariant].highlight.blur / 2,
+            shadowOpacity: neumorphicShadows[variant].highlight.opacity,
+            shadowRadius: neumorphicShadows[variant].highlight.blur / 2,
           }
         ]}
         pointerEvents="none"
@@ -106,68 +130,24 @@ export const NeumorphicCard: React.FC<NeumorphicCardProps> = ({
         style={[
           { 
             borderRadius: radius,
-            backgroundColor: actualVariant === 'pressed' ? baseColors.bgTertiary : baseColors.bg,
+            backgroundColor: baseColors.bg,
             padding,
             flex: 1,
           },
           {
-            shadowColor: neumorphicShadows[actualVariant].shadow.color,
+            shadowColor: neumorphicShadows[variant].shadow.color,
             shadowOffset: {
-              width: neumorphicShadows[actualVariant].shadow.offsetX,
-              height: neumorphicShadows[actualVariant].shadow.offsetY,
+              width: neumorphicShadows[variant].shadow.offsetX,
+              height: neumorphicShadows[variant].shadow.offsetY,
             },
-            shadowOpacity: neumorphicShadows[actualVariant].shadow.opacity,
-            shadowRadius: neumorphicShadows[actualVariant].shadow.blur / 2,
-            elevation: actualVariant === 'flat' ? 1 : actualVariant === 'pressed' ? 3 : actualVariant === 'deep' ? 12 : 8,
+            shadowOpacity: neumorphicShadows[variant].shadow.opacity,
+            shadowRadius: neumorphicShadows[variant].shadow.blur / 2,
+            elevation: variant === 'flat' ? 1 : variant === 'pressed' ? 3 : variant === 'deep' ? 12 : 8,
           }
         ]}
       >
         {children}
       </View>
-      
-      {/* Inner highlight overlay (top-left edge) */}
-      <View
-        style={[
-          {
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            borderRadius: radius,
-            pointerEvents: 'none',
-          },
-          {
-            shadowColor: '#ffffff',
-            shadowOffset: { width: -2, height: -2 },
-            shadowOpacity: 0.06,
-            shadowRadius: 2,
-          }
-        ]}
-        pointerEvents="none"
-      />
-      
-      {/* Inner shadow overlay (bottom-right edge) */}
-      <View
-        style={[
-          {
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            borderRadius: radius,
-            pointerEvents: 'none',
-          },
-          {
-            shadowColor: '#000000',
-            shadowOffset: { width: 2, height: 2 },
-            shadowOpacity: 0.1,
-            shadowRadius: 2,
-          }
-        ]}
-        pointerEvents="none"
-      />
     </View>
   );
 };
@@ -223,7 +203,7 @@ export const NeumorphicButton: React.FC<{
     justifyContent: 'center',
     borderWidth: variant === 'ghost' || variant === 'outline' ? 2 : 0,
     borderColor: borderColors[variant],
-    shadowColor: variant === 'ghost' || variant === 'outline' ? 'transparent' : baseColors.shadowColored,
+    shadowColor: variant === 'ghost' || variant === 'outline' ? 'transparent' : baseColors.shadowColor,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: variant === 'ghost' || variant === 'outline' ? 0 : 0.3,
     shadowRadius: 8,
@@ -233,14 +213,14 @@ export const NeumorphicButton: React.FC<{
   };
 
   return (
-    <NeumorphicCard
-      variant="raised"
-      padding={0}
-      borderRadius={radius}
+    <TouchableOpacity
+      style={[baseStyle, style]}
       onPress={onPress}
       disabled={disabled || loading}
       activeOpacity={0.85}
-      style={[baseStyle, style]}
+      accessible={true}
+      accessibilityRole="button"
+      accessibilityState={{ disabled }}
     >
       {loading ? (
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
@@ -256,15 +236,14 @@ export const NeumorphicButton: React.FC<{
           />
         </View>
       ) : (
-        <View style={{ color: textColors[variant] }}>
+        <Text style={{ color: textColors[variant] }}>
           {children}
-        </View>
+        </Text>
       )}
-    </NeumorphicCard>
+    </TouchableOpacity>
   );
 };
 
-// Toggle switch with neumorphic styling
 export const NeumorphicToggle: React.FC<{
   value: boolean;
   onChange: (value: boolean) => void;
@@ -283,7 +262,7 @@ export const NeumorphicToggle: React.FC<{
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
       {label && <Text style={{ color: baseColors.text, fontSize: 14 }}>{label}</Text>}
-      <View
+      <TouchableOpacity
         style={{
           width: s.trackWidth,
           height: s.trackHeight,
@@ -308,6 +287,7 @@ export const NeumorphicToggle: React.FC<{
           }),
         }}
         onPress={() => !disabled && onChange(!value)}
+        disabled={disabled}
       >
         <View
           style={{
@@ -323,10 +303,9 @@ export const NeumorphicToggle: React.FC<{
             elevation: 3,
           }}
         />
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };
 
-// Need to import Text
-import { Text } from 'react-native';
+export default NeumorphicCard;
